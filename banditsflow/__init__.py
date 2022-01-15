@@ -1,8 +1,11 @@
 from metaflow import FlowSpec, Parameter, step
 from metaflow.datastore.inputs import Inputs
 
+from . import runner as run
+
 
 class BanditsFlow(FlowSpec):  # type: ignore
+    param_scenario = Parameter("scenario", type=str, help="Name of scenario")
     param_actor = Parameter("actor", type=str, multiple=True, help="Name of actor")
 
     @step
@@ -11,6 +14,10 @@ class BanditsFlow(FlowSpec):  # type: ignore
 
     @step
     def optimize(self) -> None:
+        actor_name = self.input
+        runner = run.Runner(self.param_scenario, actor_name)
+        self.best_params = runner.optimize(1, 1, "maximize", "reward", 1)
+
         self.next(self.evaluate)
 
     @step

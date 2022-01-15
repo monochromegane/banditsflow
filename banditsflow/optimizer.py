@@ -12,7 +12,9 @@ class Optimizer:
         self.actor_name = actor_name
         self.loader = loader
 
-    def optimize(self, n_trials: int, n_ite: int, direction: str, metric: str) -> None:
+    def optimize(
+        self, n_trials: int, n_ite: int, direction: str, metric: str, seed: int
+    ) -> optuna.study.Study:
         suggestions = self.loader.load(self.actor_name)
 
         def objective(trial: optuna.trial.Trial) -> float:
@@ -20,6 +22,11 @@ class Optimizer:
 
             print(params)
             return 0.0
+
+        study = optuna.create_study(
+            direction=direction, sampler=optuna.samplers.TPESampler(seed=seed)
+        )
+        return study
 
 
 def suggestions_to_params(

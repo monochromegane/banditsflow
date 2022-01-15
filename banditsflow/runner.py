@@ -1,5 +1,5 @@
 import importlib
-from typing import cast
+from typing import Any, Dict, cast
 
 from . import optimizer as optim
 from . import suggestion as suggest
@@ -12,9 +12,11 @@ class Runner:
 
     def optimize(
         self, n_trials: int, n_ite: int, direction: str, metric: str, seed: int
-    ) -> None:
+    ) -> Dict[str, Any]:
         loader = cast(
             suggest.SuggestionLoader, importlib.import_module("suggestion.loader")
         )
         optimizer = optim.Optimizer(self.actor_name, loader)
-        optimizer.optimize(n_trials, n_ite, direction, metric)
+        study = optimizer.optimize(n_trials, n_ite, direction, metric, seed)
+
+        return study.best_params
