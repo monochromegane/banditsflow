@@ -1,4 +1,4 @@
-from typing import List, Protocol
+from typing import List, Protocol, Type
 
 from . import actor as act
 from . import scenario
@@ -13,7 +13,9 @@ class ActionCallbackType(Protocol):
 
 class Simulator:
     def __init__(
-        self, scenario_loader: scenario.ScenarioLoader, actor_loader: act.ActorLoader
+        self,
+        scenario_loader: Type[scenario.ScenarioLoader],
+        actor_loader: Type[act.ActorLoader],
     ) -> None:
         self.scenario_loader = scenario_loader
         self.actor_loader = actor_loader
