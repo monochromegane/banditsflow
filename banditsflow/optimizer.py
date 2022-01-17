@@ -2,6 +2,7 @@ from typing import List, cast
 
 import optuna
 
+from . import actor as act
 from . import simulator as sim
 from . import suggestion as suggest
 
@@ -30,8 +31,8 @@ class Optimizer:
 
 def suggestions_to_params(
     suggestions: List[suggest.SuggestionType], trial: optuna.trial.Trial
-) -> sim.ParamsType:
-    params: sim.ParamsType = {}
+) -> act.ParamsType:
+    params: act.ParamsType = {}
     for unknown_suggestion in suggestions:
         name = unknown_suggestion["name"]
         type_ = unknown_suggestion["type_"]

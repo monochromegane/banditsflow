@@ -1,7 +1,8 @@
-from typing import Any, Dict, Protocol, TypedDict
+from typing import Any, Dict, Protocol, TypedDict, Union
 
 from . import scenario
-from . import simulator as sim
+
+ParamsType = Dict[str, Union[None, bool, int, float, str]]
 
 
 class ActionType(TypedDict):
@@ -10,7 +11,7 @@ class ActionType(TypedDict):
 
 
 class Actor(Protocol):
-    def __init__(self, name: str, params: sim.ParamsType, seed: int) -> None:
+    def __init__(self, name: str, params: ParamsType, seed: int) -> None:
         ...
 
     def act(self, line: scenario.LineType) -> ActionType:
@@ -19,5 +20,5 @@ class Actor(Protocol):
 
 class ActorLoader(Protocol):
     @staticmethod
-    def load(name: str, params: sim.ParamsType, seed: int) -> Actor:
+    def load(name: str, params: ParamsType, seed: int) -> Actor:
         ...

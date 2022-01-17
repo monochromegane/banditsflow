@@ -4,7 +4,6 @@ from typing import Dict, List, Protocol, Union, cast
 from . import actor as act
 from . import scenario
 
-ParamsType = Dict[str, Union[None, bool, int, float, str]]
 SimulationResultType = List[List[act.ActionType]]
 
 
@@ -27,7 +26,7 @@ class Simulator:
     def run(
         self,
         n_ite: int,
-        params: ParamsType,
+        params: act.ParamsType,
         callbacks: List[ActionCallbackType],
         seed: int,
     ) -> SimulationResultType:
@@ -41,7 +40,7 @@ class Simulator:
     def _run_scenario(
         self,
         current_ite: int,
-        params: ParamsType,
+        params: act.ParamsType,
         callbacks: List[ActionCallbackType],
         seed: int,
     ) -> List[act.ActionType]:
