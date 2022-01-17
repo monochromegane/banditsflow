@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import List, Type, cast
 
 import optuna
 
@@ -7,7 +7,7 @@ from . import suggestion as suggest
 
 
 class Optimizer:
-    def __init__(self, actor_name: str, loader: suggest.SuggestionLoader) -> None:
+    def __init__(self, actor_name: str, loader: Type[suggest.SuggestionLoader]) -> None:
         self.actor_name = actor_name
         self.loader = loader
 
