@@ -3,7 +3,6 @@ from typing import List, cast
 import optuna
 
 from . import actor as act
-from . import simulator as sim
 from . import suggestion as suggest
 
 
