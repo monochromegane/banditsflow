@@ -1,9 +1,12 @@
-from typing import Any, Dict, Protocol
+from typing import Any, Dict, Protocol, TypedDict
 
 from . import scenario
 from . import simulator as sim
 
-ActionType = Dict[str, Any]
+
+class ActionType(TypedDict):
+    metric: Dict[str, float]
+    result: Dict[str, Any]
 
 
 class Actor(Protocol):

@@ -1,10 +1,11 @@
 import importlib
-from typing import Dict, Union, cast
+from typing import Dict, List, Union, cast
 
 from . import actor as act
 from . import scenario
 
 ParamsType = Dict[str, Union[None, bool, int, float, str]]
+SimulationResultType = List[List[act.ActionType]]
 
 
 class Simulator:
@@ -18,16 +19,25 @@ class Simulator:
             act.ActorLoader, importlib.import_module("actor.loader")
         )
 
-    def run(self, n_ite: int, params: ParamsType, seed: int) -> None:
+    def run(self, n_ite: int, params: ParamsType, seed: int) -> SimulationResultType:
+        results: SimulationResultType = []
         for ite in range(n_ite):
-            self._run_simulation(ite, params, seed + ite)
+            result = self._run_scenario(ite, params, seed + ite)
+            results.append(result)
 
-    def _run_simulation(self, current_ite: int, params: ParamsType, seed: int) -> None:
+        return results
+
+    def _run_scenario(
+        self, current_ite: int, params: ParamsType, seed: int
+    ) -> List[act.ActionType]:
         scenario = self.scenario_loader.load(self.scenario_name)
         actor = self.actor_loader.load(self.actor_name, params, seed)
 
+        result: List[act.ActionType] = []
         while scenario.scan():
             line = scenario.line()
             action = actor.act(line)
 
-            print(action)
+            result.append(action)
+
+        return result
