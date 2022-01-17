@@ -7,6 +7,11 @@ from . import runner as run
 class BanditsFlow(FlowSpec):  # type: ignore
     param_scenario = Parameter("scenario", type=str, help="Name of scenario")
     param_actor = Parameter("actor", type=str, multiple=True, help="Name of actor")
+    param_n_ite = Parameter("n_ite", type=int, default=1, help="Number of simulation")
+    param_n_trials = Parameter(
+        "n_trials", type=int, default=1, help="Number of optimization"
+    )
+    param_seed = Parameter("seed", type=int, default=1, help="Seed of seed")
 
     @step
     def start(self) -> None:
@@ -16,12 +21,23 @@ class BanditsFlow(FlowSpec):  # type: ignore
     def optimize(self) -> None:
         actor_name = self.input
         runner = run.Runner(self.param_scenario, actor_name)
-        self.best_params = runner.optimize(1, 1, "maximize", "reward", 1)
+        self.best_params = runner.optimize(
+            self.param_n_trials, self.param_n_ite, "maximize", "reward", self.param_seed
+        )
 
         self.next(self.evaluate)
 
     @step
     def evaluate(self) -> None:
+        actor_name = self.input
+        runner = run.Runner(self.param_scenario, actor_name)
+        self.results = runner.evaluate(
+            self.param_n_ite,
+            self.best_params,
+            [],
+            self.param_seed + self.param_n_trials,
+        )
+
         self.next(self.join)
 
     @step
