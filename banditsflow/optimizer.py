@@ -1,10 +1,9 @@
-from typing import Dict, List, Union, cast
+from typing import List, cast
 
 import optuna
 
+from . import simulator as sim
 from . import suggestion as suggest
-
-ParamsType = Dict[str, Union[None, bool, int, float, str]]
 
 
 class Optimizer:
@@ -31,8 +30,8 @@ class Optimizer:
 
 def suggestions_to_params(
     suggestions: List[suggest.SuggestionType], trial: optuna.trial.Trial
-) -> ParamsType:
-    params: ParamsType = {}
+) -> sim.ParamsType:
+    params: sim.ParamsType = {}
     for unknown_suggestion in suggestions:
         name = unknown_suggestion["name"]
         type_ = unknown_suggestion["type_"]
