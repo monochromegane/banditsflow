@@ -1,9 +1,10 @@
 import importlib
-from typing import Any, Dict, Type, cast
+from typing import Any, Dict, List, Type, cast
 
 from . import actor as act
 from . import optimizer as optim
 from . import scenario
+from . import simulator as sim
 from . import suggestion as suggest
 
 
@@ -38,3 +39,15 @@ class Runner:
         )
 
         return study.best_params
+
+    def evaluate(
+        self,
+        n_ite: int,
+        params: act.ParamsType,
+        callbacks: List[sim.ActionCallbackType],
+        seed: int,
+    ) -> sim.SimulationResultType:
+        simulator = sim.Simulator(self.scenario_loader, self.actor_loader)
+        return simulator.run(
+            n_ite, self.scenario_name, self.actor_name, params, callbacks, seed
+        )
