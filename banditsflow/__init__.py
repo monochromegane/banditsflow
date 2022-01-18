@@ -22,7 +22,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
     param_actor = Parameter(
         "actor", type=str, required=True, multiple=True, help="Name of actor"
     )
-    param_actor = Parameter(
+    param_reporter = Parameter(
         "reporter", type=str, required=True, help="Name of reporter"
     )
     param_n_ite = Parameter("n_ite", type=int, default=1, help="Number of simulation")
