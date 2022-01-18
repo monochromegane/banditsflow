@@ -51,4 +51,8 @@ class Optimizer:
 
 
 def to_objective(metric: str, results: sim.SimulationResultType) -> float:
-    return 0.0
+    last_metrics = [result[-1]["metric"] for result in results]
+    objective_values = [
+        last_metric[metric] for last_metric in last_metrics if metric in last_metric
+    ]
+    return sum(objective_values) / len(objective_values)
