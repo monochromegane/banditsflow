@@ -65,7 +65,8 @@ class BanditsFlow(FlowSpec):  # type: ignore
                 for key, value in action["metric"].items():
                     mlflow.log_metric(f"{key}_{current_ite}", value, step=step)
 
-            self.results = runner.evaluate(
+            self.actor = actor_name
+            self.result = runner.evaluate(
                 self.param_n_ite,
                 self.best_params,
                 [callback],
@@ -76,6 +77,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
 
     @step
     def join(self, inputs: Inputs) -> None:
+        self.results = {input_.actor: input_.result for input_ in inputs}
         self.next(self.plot)
 
     @step
