@@ -22,7 +22,6 @@ class Optimizer:
     def optimize(
         self,
         n_trials: int,
-        n_ite: int,
         scenario_name: str,
         actor_name: str,
         direction: str,
@@ -37,7 +36,7 @@ class Optimizer:
 
             simulator = sim.Simulator(self.scenario_loader, self.actor_loader)
             results = simulator.run(
-                n_ite, scenario_name, actor_name, params, [], seed + trial.number
+                1, scenario_name, actor_name, params, [], seed + trial.number
             )
 
             return to_objective(metric, results)

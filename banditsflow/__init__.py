@@ -34,7 +34,6 @@ class BanditsFlow(FlowSpec):  # type: ignore
         runner = run.Runner(self.param_scenario, actor_name)
         self.best_params = runner.optimize(
             self.param_n_trials,
-            self.param_n_ite,
             self.param_optimization_direction,
             self.param_optimization_metric,
             self.param_seed,

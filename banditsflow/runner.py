@@ -23,14 +23,13 @@ class Runner:
         )
 
     def optimize(
-        self, n_trials: int, n_ite: int, direction: str, metric: str, seed: int
+        self, n_trials: int, direction: str, metric: str, seed: int
     ) -> Dict[str, Any]:
         optimizer = optim.Optimizer(
             self.scenario_loader, self.actor_loader, self.suggestion_loader
         )
         study = optimizer.optimize(
             n_trials,
-            n_ite,
             self.scenario_name,
             self.actor_name,
             direction,
