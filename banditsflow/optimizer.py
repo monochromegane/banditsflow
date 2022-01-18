@@ -1,4 +1,4 @@
-from typing import List, Type, cast
+from typing import Type
 
 import optuna
 
@@ -30,9 +30,10 @@ class Optimizer:
         seed: int,
     ) -> optuna.study.Study:
         suggestions = self.suggestion_loader.load(actor_name)
+        suggester = suggest.Suggester(suggestions)
 
         def objective(trial: optuna.trial.Trial) -> float:
-            params = suggestions_to_params(suggestions, trial)
+            params = suggester.suggest(trial)
 
             simulator = sim.Simulator(self.scenario_loader, self.actor_loader)
             results = simulator.run(
@@ -47,55 +48,6 @@ class Optimizer:
         study.optimize(objective, n_trials=n_trials)
 
         return study
-
-
-def suggestions_to_params(
-    suggestions: List[suggest.SuggestionType], trial: optuna.trial.Trial
-) -> act.ParamsType:
-    params: act.ParamsType = {}
-    for unknown_suggestion in suggestions:
-        name = unknown_suggestion["name"]
-        type_ = unknown_suggestion["type_"]
-
-        suggestion: suggest.SuggestionType
-        if type_ == "categorical":
-            suggestion = cast(suggest.CategoricalSuggestion, unknown_suggestion)
-            params[name] = trial.suggest_categorical(name, suggestion["choices"])
-        elif type_ == "discrete_uniform":
-            suggestion = cast(suggest.DiscreteUniformSuggestion, unknown_suggestion)
-            params[name] = trial.suggest_discrete_uniform(
-                name, suggestion["low"], suggestion["high"], suggestion["q"]
-            )
-        elif type_ == "float":
-            suggestion = cast(suggest.FloatSuggestion, unknown_suggestion)
-            params[name] = trial.suggest_float(
-                name,
-                suggestion["low"],
-                suggestion["high"],
-                step=suggestion["step"],
-                log=suggestion["log"],
-            )
-        elif type_ == "int":
-            suggestion = cast(suggest.IntSuggestion, unknown_suggestion)
-            params[name] = trial.suggest_int(
-                name,
-                suggestion["low"],
-                suggestion["high"],
-                step=suggestion["step"],
-                log=suggestion["log"],
-            )
-        elif type_ == "loguniform":
-            suggestion = cast(suggest.LogUniformSuggestion, unknown_suggestion)
-            params[name] = trial.suggest_loguniform(
-                name, suggestion["low"], suggestion["high"]
-            )
-        elif type_ == "uniform":
-            suggestion = cast(suggest.UniformSuggestion, unknown_suggestion)
-            params[name] = trial.suggest_uniform(
-                name, suggestion["low"], suggestion["high"]
-            )
-
-    return params
 
 
 def to_objective(metric: str, results: sim.SimulationResultType) -> float:
