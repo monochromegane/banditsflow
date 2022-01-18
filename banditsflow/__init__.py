@@ -10,11 +10,21 @@ from . import runner as run
 
 
 class BanditsFlow(FlowSpec):  # type: ignore
-    param_git_tag = Parameter("git_tag", type=str, help="Name of Git tag")
-    param_git_commit = Parameter("git_commit", type=str, help="Hash of Git commit")
-    param_scenario = Parameter("scenario", type=str, help="Name of scenario")
-    param_actor = Parameter("actor", type=str, multiple=True, help="Name of actor")
-    param_actor = Parameter("reporter", type=str, help="Name of reporter")
+    param_git_tag = Parameter(
+        "git_tag", type=str, required=True, help="Name of Git tag"
+    )
+    param_git_commit = Parameter(
+        "git_commit", type=str, required=True, help="Hash of Git commit"
+    )
+    param_scenario = Parameter(
+        "scenario", type=str, required=True, help="Name of scenario"
+    )
+    param_actor = Parameter(
+        "actor", type=str, required=True, multiple=True, help="Name of actor"
+    )
+    param_actor = Parameter(
+        "reporter", type=str, required=True, help="Name of reporter"
+    )
     param_n_ite = Parameter("n_ite", type=int, default=1, help="Number of simulation")
     param_seed = Parameter("seed", type=int, default=1, help="Seed of seed")
     param_n_trials = Parameter(
@@ -29,6 +39,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
     param_optimization_metric = Parameter(
         "optimization_metric",
         type=str,
+        required=True,
         help="Name of simulation metric for optimization",
     )
 
