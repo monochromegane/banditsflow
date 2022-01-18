@@ -40,7 +40,7 @@ class Runner:
 
         if reporter_name is not None:
             self.reporter_name: str = reporter_name
-            reporter_loader_module = (importlib.import_module("reporter.loader"),)
+            reporter_loader_module = importlib.import_module("reporter.loader")
             self.reporter_loader = cast(
                 Type[report.ReporterLoader],
                 getattr(reporter_loader_module, "Loader"),  # noqa: B009
