@@ -13,6 +13,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
     param_git_commit = Parameter("git_commit", type=str, help="Hash of Git commit")
     param_scenario = Parameter("scenario", type=str, help="Name of scenario")
     param_actor = Parameter("actor", type=str, multiple=True, help="Name of actor")
+    param_actor = Parameter("reporter", type=str, help="Name of reporter")
     param_n_ite = Parameter("n_ite", type=int, default=1, help="Number of simulation")
     param_seed = Parameter("seed", type=int, default=1, help="Seed of seed")
     param_n_trials = Parameter(
@@ -37,7 +38,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
     @step
     def optimize(self) -> None:
         actor_name = self.input
-        runner = run.Runner(self.param_scenario, actor_name)
+        runner = run.Runner(self.param_scenario, actor_name=actor_name)
         self.best_params = runner.optimize(
             self.param_n_trials,
             self.param_optimization_direction,
@@ -50,7 +51,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
     @step
     def evaluate(self) -> None:
         actor_name = self.input
-        runner = run.Runner(self.param_scenario, actor_name)
+        runner = run.Runner(self.param_scenario, actor_name=actor_name)
 
         with mlflow.start_run(
             experiment_id=self._experiment_id(),
@@ -82,6 +83,9 @@ class BanditsFlow(FlowSpec):  # type: ignore
 
     @step
     def plot(self) -> None:
+        runner = run.Runner(self.param_scenario, reporter_name=self.param_reporter)
+        outdir = ""
+        _ = runner.report(outdir, self.results)
         self.next(self.end)
 
     @step
