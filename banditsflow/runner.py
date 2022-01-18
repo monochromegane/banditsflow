@@ -19,24 +19,31 @@ class Runner:
     ) -> None:
         self.scenario_name = scenario_name
 
+        scenario_loader_module = importlib.import_module("scenario.loader")
         self.scenario_loader = cast(
-            Type[scenario.ScenarioLoader], importlib.import_module("scenario.loader")
+            Type[scenario.ScenarioLoader],
+            getattr(scenario_loader_module, "Loader"),  # noqa: B009
         )
+        suggestion_loader_module = importlib.import_module("suggestion.loader")
         self.suggestion_loader = cast(
-            Type[suggest.SuggestionLoader], importlib.import_module("suggestion.loader")
+            Type[suggest.SuggestionLoader],
+            getattr(suggestion_loader_module, "Loader"),  # noqa: B009
         )
 
         if actor_name is not None:
             self.actor_name: str = actor_name
+            actor_loader_module = importlib.import_module("actor.loader")
             self.actor_loader = cast(
-                Type[act.ActorLoader], importlib.import_module("actor.loader")
+                Type[act.ActorLoader],
+                getattr(actor_loader_module, "Loader"),  # noqa: B009
             )
 
         if reporter_name is not None:
             self.reporter_name: str = reporter_name
+            reporter_loader_module = (importlib.import_module("reporter.loader"),)
             self.reporter_loader = cast(
                 Type[report.ReporterLoader],
-                importlib.import_module("reporter.loader"),
+                getattr(reporter_loader_module, "Loader"),  # noqa: B009
             )
 
     def optimize(
