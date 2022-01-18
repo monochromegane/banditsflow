@@ -7,7 +7,7 @@ CategoricalChoiceType = Union[None, bool, int, float, str]
 
 class Suggestion(TypedDict):
     name: str
-    type_: str
+    type: str
 
 
 class CategoricalSuggestion(Suggestion):
@@ -102,7 +102,7 @@ class Suggester:
         params: act.ParamsType = {}
         for unknown_suggestion in self.suggestions:
             name = unknown_suggestion["name"]
-            type_ = unknown_suggestion["type_"]
+            type_ = unknown_suggestion["type"]
 
             suggestion: SuggestionType
             if type_ == "categorical":
