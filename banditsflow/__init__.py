@@ -1,3 +1,4 @@
+import tempfile
 from typing import Dict
 
 import mlflow
@@ -79,13 +80,23 @@ class BanditsFlow(FlowSpec):  # type: ignore
     @step
     def join(self, inputs: Inputs) -> None:
         self.results = {input_.actor: input_.result for input_ in inputs}
-        self.next(self.plot)
+        self.next(self.report)
 
     @step
-    def plot(self) -> None:
+    def report(self) -> None:
         runner = run.Runner(self.param_scenario, reporter_name=self.param_reporter)
-        outdir = ""
-        _ = runner.report(outdir, self.results)
+
+        with mlflow.start_run(
+            experiment_id=self._experiment_id(),
+            run_name=current.run_id,
+            tags=self._experiment_tags(),
+        ):
+            with tempfile.TemporaryDirectory() as dirname:
+                report_paths = runner.report(dirname, self.results)
+
+                for path in report_paths:
+                    mlflow.log_artifact(path)
+
         self.next(self.end)
 
     @step
