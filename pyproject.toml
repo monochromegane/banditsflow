@@ -6,13 +6,19 @@ authors = ["monochromegane"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
-metaflow = "^2.4.8"
-mlflow = "^1.22.0"
+python = ">=3.9,<3.11"
+scipy = "^1.7.3"
+numpy = "^1.22.1"
+metaflow = "^2.4.9"
+mlflow = "^1.23.0"
 optuna = "^2.10.0"
 
 [tool.poetry.dev-dependencies]
-pysen = {extras = ["lint"], version = "^0.10.1"}
+pysen = "^0.10.1"
+black = "^21.12b0"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+mypy = "^0.931"
 pytest = "^6.2.5"
 
 [build-system]
