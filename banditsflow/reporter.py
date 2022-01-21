@@ -4,7 +4,7 @@ from . import simulator as sim
 
 
 class Reporter(Protocol):
-    def __init__(self, name: str, outdir: str) -> None:
+    def __init__(self, outdir: str) -> None:
         ...
 
     def report(self, results: Dict[str, sim.SimulationResultType]) -> List[str]:
