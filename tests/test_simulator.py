@@ -14,10 +14,14 @@ class DummyScenarioLoader:
 class DummyScenario:
     def __init__(self) -> None:
         self.i = -1
+        self.n_ite = 2
+
+    def synopsis(self) -> scenario.LineType:
+        return {"n_ite": self.n_ite}
 
     def scan(self) -> bool:
         self.i += 1
-        return self.i < 2
+        return self.i < self.n_ite
 
     def line(self) -> scenario.LineType:
         return {"i": self.i}
@@ -25,12 +29,20 @@ class DummyScenario:
 
 class DummyEchoActorLoader:
     @staticmethod
-    def load(name: str, params: act.ParamsType, seed: int) -> act.Actor:
-        return DummyEchoActor(name, params, seed)
+    def load(
+        name: str, synopsis: scenario.SynopsisType, params: act.ParamsType, seed: int
+    ) -> act.Actor:
+        return DummyEchoActor(name, synopsis, params, seed)
 
 
 class DummyEchoActor:
-    def __init__(self, name: str, params: act.ParamsType, seed: int) -> None:
+    def __init__(
+        self,
+        name: str,
+        synopsis: scenario.SynopsisType,
+        params: act.ParamsType,
+        seed: int,
+    ) -> None:
         self.name = name
         self.params = params
         self.seed = seed

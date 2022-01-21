@@ -11,7 +11,9 @@ class ActionType(TypedDict):
 
 
 class Actor(Protocol):
-    def __init__(self, name: str, params: ParamsType, seed: int) -> None:
+    def __init__(
+        self, synopsis: scenario.SynopsisType, params: ParamsType, seed: int
+    ) -> None:
         ...
 
     def act(self, line: scenario.LineType) -> ActionType:
@@ -20,5 +22,7 @@ class Actor(Protocol):
 
 class ActorLoader(Protocol):
     @staticmethod
-    def load(name: str, params: ParamsType, seed: int) -> Actor:
+    def load(
+        name: str, synopsis: scenario.SynopsisType, params: ParamsType, seed: int
+    ) -> Actor:
         ...
