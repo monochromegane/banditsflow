@@ -113,3 +113,18 @@ def test_suggest_uniform_is_called_with_parameters() -> None:
         suggestion["low"],
         suggestion["high"],
     )
+
+
+def test_suggests_are_not_called() -> None:
+    suggester = suggest.Suggester([])
+    mock_trial = Mock(spec=suggest.Trial)
+    params = suggester.suggest(mock_trial)
+
+    mock_trial.suggest_categorical.assert_not_called()
+    mock_trial.suggest_discrete_uniform.assert_not_called()
+    mock_trial.suggest_float.assert_not_called()
+    mock_trial.suggest_int.assert_not_called()
+    mock_trial.suggest_loguniform.assert_not_called()
+    mock_trial.suggest_uniform.assert_not_called()
+
+    assert len(params) == 0
