@@ -34,6 +34,8 @@ $ mlflow ui
 
 And access to http://127.0.0.1:5000
 
+
+
 ## Build experimence module
 
 1. Implement our scenario.
@@ -56,6 +58,40 @@ Note that each module has a loader.Loader class which returns its instance by na
 └── suggestion
     ├── ACTOR_NAME.yml
     └── loader.py
+```
+
+## Workflow
+
+BanditsFlow provides the following workflow.
+The workflow has optimize and evaluate and report steps.
+The each step result are saved by Metaflow and MLflow Tracking.
+
+```
+               ┌─────────┐
+               │  start  │
+               └────┬────┘
+     ┌──────────────┼──────────────┐
+ (actor-1)      (actor-2)      (actor-3)
+┌────┴────┐    ┌────┴────┐    ┌────┴────┐
+│optimize │    │optimize │    │optimize │
+└────┬────┘    └────┬────┘    └────┬────┘
+best_params         │              │
+┌────┴────┐    ┌────┴────┐    ┌────┴────┐
+│evaluate │    │evaluate │    │evaluate ├─┬─► [Parameter]
+└────┬────┘    └────┬────┘    └────┬────┘ │
+     │              │              │      └─► [Metric]
+  result         result         result
+     └──────────────┼──────────────┘
+               ┌────┴────┐
+               │  join   │
+               └────┬────┘
+                 results
+               ┌────┴────┐
+               │ report  ├──────────────────► [Artifact]
+               └────┬────┘
+               ┌────┴────┐
+               │   end   │
+               └─────────┘
 ```
 
 ## Optimization
