@@ -1,0 +1,55 @@
+import os
+from typing import Dict, List
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from banditsflow import reporter as report
+from banditsflow import simulator as sim
+
+
+class ${class_name}:
+    def __init__(self, outdir: str) -> None:
+        self.outdir = outdir
+
+    def report(self, results: Dict[str, sim.SimulationResultType]) -> List[str]:
+        fig, axes = plt.subplots(2, 1, sharex=True)
+        for name, result in results.items():
+            df_reward, df_best_arm_rate = self._aggregate_actor(name, result)
+            axes[0].plot(df_reward, label=name)
+            axes[1].plot(df_best_arm_rate, label=name)
+
+        axes[0].set_title("Cumulative reward")
+        axes[1].set_title("Best arm rate")
+        plt.legend()
+
+        path = os.path.join(self.outdir, "result.png")
+        plt.savefig(path)
+
+        return [path]
+
+    def _aggregate_actor(
+        self, name: str, result: sim.SimulationResultType
+    ) -> List[pd.DataFrame]:
+        dfs = [
+            pd.DataFrame(
+                [
+                    [action["result"]["idx_arm"], action["result"]["reward"]]
+                    for action in ite
+                ],
+                columns=["idx_arm", "reward"],
+            )
+            for ite in result
+        ]
+        df_rewards = pd.concat([df["reward"] for df in dfs], axis=1)
+        df_bests = pd.concat([df["idx_arm"] == 0.0 for df in dfs], axis=1)
+
+        return [
+            df_rewards.mean(axis=1).cumsum(),
+            df_bests.mean(axis=1).expanding().mean(),
+        ]
+
+
+class Loader:
+    @staticmethod
+    def load(name: str, outdir: str) -> report.Reporter:
+        return ${class_name}(outdir)

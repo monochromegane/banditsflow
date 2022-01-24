@@ -1,0 +1,44 @@
+import os
+from typing import List
+
+import yaml
+from banditsflow import suggestion as suggest
+
+
+class Loader:
+    @staticmethod
+    def load(name: str) -> List[suggest.SuggestionType]:
+        typeddict_suggestions: List[suggest.SuggestionType] = []
+
+        path = os.path.normpath(os.path.join(os.path.dirname(__file__), f"{name}.yml"))
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                dict_suggestions = yaml.safe_load(f)["suggestions"]
+
+                for suggestion in dict_suggestions:
+                    name = suggestion["name"]
+                    type_ = suggestion["type"]
+                    if type_ == "categorical":
+                        catecorical_suggestion: suggest.CategoricalSuggestion = (
+                            suggestion
+                        )
+                        typeddict_suggestions.append(catecorical_suggestion)
+                    elif type_ == "discrete_uniform":
+                        discrete_uniform_suggestion: suggest.DiscreteUniformSuggestion = (
+                            suggestion
+                        )
+                        typeddict_suggestions.append(discrete_uniform_suggestion)
+                    elif type_ == "float":
+                        float_suggestion: suggest.FloatSuggestion = suggestion
+                        typeddict_suggestions.append(float_suggestion)
+                    elif type_ == "int":
+                        int_suggestion: suggest.IntSuggestion = suggestion
+                        typeddict_suggestions.append(int_suggestion)
+                    elif type_ == "loguniform":
+                        loguniform_suggestion: suggest.LogUniformSuggestion = suggestion
+                        typeddict_suggestions.append(loguniform_suggestion)
+                    elif type_ == "uniform":
+                        uniform_suggestion: suggest.UniformSuggestion = suggestion
+                        typeddict_suggestions.append(uniform_suggestion)
+
+        return typeddict_suggestions

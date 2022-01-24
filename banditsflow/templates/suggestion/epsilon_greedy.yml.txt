@@ -1,0 +1,6 @@
+suggestions:
+  - name: epsilon
+    type: discrete_uniform
+    low: 0.1
+    high: 1.0
+    q: 0.1

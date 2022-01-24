@@ -1,0 +1,149 @@
+import math
+from typing import List, Protocol, Type, cast
+
+import numpy as np
+from banditsflow import actor as act
+from banditsflow import scenario
+
+
+class Arms:
+    def __init__(self, num_arms: int, seed: int) -> None:
+        self.random = np.random.RandomState(seed)
+        self.thetas: List[float] = [0.0 for _ in range(num_arms)]
+
+    def play(self, idx_arm: int) -> float:
+        theta = self.thetas[idx_arm]
+        return cast(float, self.random.choice([0.0, 1.0], p=[1.0 - theta, theta]))
+
+
+class AlgorithmType(Protocol):
+    def __init__(
+        self, synopsis: scenario.SynopsisType, params: act.ParamsType, seed: int
+    ) -> None:
+        ...
+
+    def select(self) -> int:
+        ...
+
+    def update(self, idx_arm: int, reward: float) -> None:
+        ...
+
+
+class Environment:
+    def __init__(
+        self,
+        synopsis: scenario.SynopsisType,
+        params: act.ParamsType,
+        algorithm_class: Type[AlgorithmType],
+        seed: int,
+    ) -> None:
+        self.num_arms = synopsis["num_arms"]
+        self.arms = Arms(synopsis["num_arms"], seed)
+        self.algorithm = algorithm_class(synopsis, params, seed)
+        self.cumulative_reward: float = 0.0
+
+    def act(self, line: scenario.LineType) -> act.ActionType:
+        thetas = cast(List[float], line["thetas"])
+        self.arms.thetas = thetas
+
+        idx_arm = self.algorithm.select()
+        reward = self.arms.play(idx_arm)
+        self.cumulative_reward += reward
+        self.algorithm.update(idx_arm, reward)
+
+        action: act.ActionType = {
+            "metric": {"cumulative_reward": self.cumulative_reward},
+            "result": {"idx_arm": idx_arm, "reward": reward},
+        }
+
+        return action
+
+
+class EpsilonGreedy:
+    def __init__(
+        self, synopsis: scenario.SynopsisType, params: act.ParamsType, seed: int
+    ) -> None:
+        self.random = np.random.RandomState(seed)
+        self.epsilon = params["epsilon"]
+        self.num_arms = synopsis["num_arms"]
+        self.counts: List[float] = [0.0 for _ in range(self.num_arms)]
+        self.rewards: List[float] = [0.0 for _ in range(self.num_arms)]
+
+    def select(self) -> int:
+        if self.random.random() > self.epsilon:
+            return cast(int, np.argmax(self._theta_hats()))
+        else:
+            return self.random.choice(len(self._theta_hats()))
+
+    def update(self, idx_arm: int, reward: float) -> None:
+        self.counts[idx_arm] += 1
+        self.rewards[idx_arm] += reward
+
+    def _theta_hats(self) -> List[float]:
+        return [
+            reward / count if count > 0.0 else 0.0
+            for count, reward in zip(self.counts, self.rewards)
+        ]
+
+
+class UCB1:
+    def __init__(
+        self, synopsis: scenario.SynopsisType, params: act.ParamsType, seed: int
+    ) -> None:
+        self.random = np.random.RandomState(seed)
+        self.num_arms = synopsis["num_arms"]
+        self.counts: List[float] = [0.0 for _ in range(self.num_arms)]
+        self.rewards: List[float] = [0.0 for _ in range(self.num_arms)]
+
+    def select(self) -> int:
+        for i, count in enumerate(self.counts):
+            if count == 0.0:
+                return i
+        return cast(int, np.argmax(self._ucb()))
+
+    def update(self, idx_arm: int, reward: float) -> None:
+        self.counts[idx_arm] += 1
+        self.rewards[idx_arm] += reward
+
+    def _ucb(self) -> List[float]:
+        n = sum(self.counts)
+        return [
+            (reward / count) + math.sqrt((2.0 * math.log(n)) / count)
+            for count, reward in zip(self.counts, self.rewards)
+        ]
+
+
+class ThompsonSampling:
+    def __init__(
+        self, synopsis: scenario.SynopsisType, params: act.ParamsType, seed: int
+    ) -> None:
+        self.random = np.random.RandomState(seed)
+        self.num_arms = synopsis["num_arms"]
+        self.counts: List[float] = [0.0 for _ in range(self.num_arms)]
+        self.rewards: List[float] = [0.0 for _ in range(self.num_arms)]
+
+    def select(self) -> int:
+        return cast(int, np.argmax(self._sample()))
+
+    def update(self, idx_arm: int, reward: float) -> None:
+        self.counts[idx_arm] += 1
+        self.rewards[idx_arm] += reward
+
+    def _sample(self) -> List[float]:
+        return [
+            self.random.beta(1.0 + reward, 1.0 + count - reward)
+            for count, reward in zip(self.counts, self.rewards)
+        ]
+
+
+class Loader:
+    @staticmethod
+    def load(
+        name: str, synopsis: scenario.SynopsisType, params: act.ParamsType, seed: int
+    ) -> act.Actor:
+        if name == "epsilon_greedy":
+            return Environment(synopsis, params, EpsilonGreedy, seed)
+        elif name == "ucb1":
+            return Environment(synopsis, params, UCB1, seed)
+        else:
+            return Environment(synopsis, params, ThompsonSampling, seed)

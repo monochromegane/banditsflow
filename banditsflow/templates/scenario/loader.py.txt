@@ -1,0 +1,25 @@
+from banditsflow import scenario
+
+
+class ${class_name}:
+    def __init__(self) -> None:
+        self.i = -1
+        self.n_ite = 1000
+        self.num_arms = 10
+        self.thetas = [1.0 / 1.5 ** i for i in range(1, 1 + self.num_arms)]
+
+    def synopsis(self) -> scenario.SynopsisType:
+        return {"num_arms": self.num_arms}
+
+    def scan(self) -> bool:
+        self.i += 1
+        return self.i < self.n_ite
+
+    def line(self) -> scenario.LineType:
+        return {"thetas": self.thetas}
+
+
+class Loader:
+    @staticmethod
+    def load(name: str) -> scenario.Scenario:
+        return ${class_name}()
