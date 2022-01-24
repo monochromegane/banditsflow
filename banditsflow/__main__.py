@@ -14,7 +14,7 @@ def cli() -> None:
 @click.argument("name")
 def scaffold(name: str) -> None:
     s.Builder().build(
-        name, os.path.join(os.getcwd(), "templates"), os.path.dirname(__file__)
+        name, os.path.join(os.path.dirname(__file__), "templates"), os.getcwd()
     )
 
 
