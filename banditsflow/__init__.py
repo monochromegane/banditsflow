@@ -10,11 +10,17 @@ from . import runner as run
 
 
 class BanditsFlow(FlowSpec):  # type: ignore
-    param_git_tag = Parameter(
-        "git_tag", type=str, required=True, help="Name of Git tag"
+    param_experiment_name = Parameter(
+        "experiment_name",
+        type=str,
+        required=True,
+        help="Name of experiment like a Git tag name.",
     )
-    param_git_commit = Parameter(
-        "git_commit", type=str, required=True, help="Hash of Git commit"
+    param_experiment_revision = Parameter(
+        "experiment_revision",
+        type=str,
+        required=True,
+        help="Revision of experiment like a hash of Git commit",
     )
     param_scenario = Parameter(
         "scenario", type=str, required=True, help="Name of scenario"
@@ -115,7 +121,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
         pass
 
     def _experiment_id(self) -> str:
-        experiment_name = self.param_git_tag
+        experiment_name = self.param_experiment_name
 
         experiment = mlflow.get_experiment_by_name(experiment_name)
         experiment_id: str
@@ -129,6 +135,6 @@ class BanditsFlow(FlowSpec):  # type: ignore
     def _experiment_tags(self) -> Dict[str, str]:
         return {
             "step": current.step_name,
-            "git_tag": self.param_git_tag,
-            "git_commit": self.param_git_commit,
+            "experiment_name": self.param_experiment_name,
+            "experiment_revision": self.param_experiment_revision,
         }
