@@ -1,3 +1,4 @@
+import os
 import pathlib
 from string import Template
 
@@ -10,9 +11,14 @@ class Builder:
                 {"class_name": self.__class__.to_title_case(name)}
             )
 
-            dest_path = pathlib.Path(dest_dir).joinpath(
-                src_path.relative_to(src_dir).with_suffix("")
-            )
+            relative_path = src_path.relative_to(src_dir).with_suffix("")
+            if str(relative_path) == "__main__.py":
+                dest_path = pathlib.Path(dest_dir).joinpath(
+                    os.path.normpath(f"{name}.py")
+                )
+            else:
+                dest_path = pathlib.Path(dest_dir).joinpath(relative_path)
+
             dest_path.parent.mkdir(parents=True, exist_ok=True)
             dest_path.write_text(new_content)
 

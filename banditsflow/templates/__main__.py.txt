@@ -1,3 +1,4 @@
 import banditsflow
 
-banditsflow.BanditsFlow()
+if __name__ == "__main__":
+    banditsflow.BanditsFlow()

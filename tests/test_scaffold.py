@@ -20,7 +20,7 @@ def test_build() -> None:
         "actor/loader.py",
         "reporter/__init__.py",
         "reporter/loader.py",
-        "__main__.py",
+        f"{name}.py",
     ]
     class_name_paths = ["scenario/loader.py", "reporter/loader.py"]
 
