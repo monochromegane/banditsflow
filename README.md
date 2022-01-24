@@ -115,6 +115,12 @@ suggestions:
 
 See [Optuna document](https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html) for other type and parameter for each type.
 
+## Installation
+
+```sh
+$ pip install git+https://github.com/monochromegane/banditsflow
+```
+
 ## License
 
 [MIT](https://github.com/monochromegane/banditsflow/blob/master/LICENSE)
