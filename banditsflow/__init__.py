@@ -69,6 +69,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
     @step
     def optimize(self) -> None:
         actor_name = self.input
+        self.actor = actor_name
 
         flow_data = data.BanditsFlowData(self.param_experiment_name)
         latest_best_params = flow_data.latest_best_params(
@@ -94,6 +95,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
     @step
     def evaluate(self) -> None:
         actor_name = self.input
+        self.actor = actor_name
         runner = run.Runner(self.param_scenario, actor_name=actor_name)
 
         with mlflow.start_run(
@@ -112,7 +114,6 @@ class BanditsFlow(FlowSpec):  # type: ignore
             flow_data = data.BanditsFlowData(self.param_experiment_name)
             latest_result = flow_data.latest_result(self.param_scenario, actor_name)
             if latest_result is None or actor_name in self.param_revival_evaluation_by:
-                self.actor = actor_name
                 self.result = runner.evaluate(
                     self.param_n_ite,
                     self.best_params,
