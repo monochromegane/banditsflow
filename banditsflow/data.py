@@ -35,7 +35,7 @@ class BanditsFlowData:
         successful_runs = [
             run
             for run in Flow(self.flow_name).runs(
-                f"experiment:{self.experiment_name}", f"scenario:{scenario_name}"
+                f"experiment_name:{self.experiment_name}", f"scenario:{scenario_name}"
             )
             if run.successful
         ]
