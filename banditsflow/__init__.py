@@ -111,7 +111,10 @@ class BanditsFlow(FlowSpec):  # type: ignore
 
             flow_data = data.BanditsFlowData(self.param_experiment_name)
             latest_result = flow_data.latest_result(self.param_scenario, actor_name)
-            revival = self.during_revival or actor_name in self.param_revival_from_evaluation_by
+            revival = (
+                self.during_revival
+                or actor_name in self.param_revival_from_evaluation_by
+            )
 
             self.result = runner.evaluate(
                 self.param_n_ite,

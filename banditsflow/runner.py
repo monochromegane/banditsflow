@@ -3,6 +3,7 @@ import types
 from typing import Any, Dict, List, Optional, Type, cast
 
 from . import actor as act
+from . import logger
 from . import optimizer as optim
 from . import reporter as report
 from . import scenario
@@ -17,6 +18,7 @@ class Runner:
         *,
         actor_name: Optional[str] = None,
         reporter_name: Optional[str] = None,
+        mute: bool = False,
     ) -> None:
         self.scenario_name = scenario_name
 
@@ -47,6 +49,8 @@ class Runner:
                 getattr(reporter_loader_module, "Loader"),  # noqa: B009
             )
 
+        self.logger = logger.Logger(mute=mute)
+
     def optimize(
         self,
         n_trials: int,
@@ -57,8 +61,14 @@ class Runner:
         latest_best_params: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         if latest_best_params is None or revival:
+            self.logger.log(
+                f"Optimizing parameters for {self.actor_name} on {self.scenario_name} scenario..."
+            )
             return self._optimize(n_trials, direction, metric, seed)
         else:
+            self.logger.log(
+                f"Use cached parameters for {self.actor_name} on {self.scenario_name} scenario."
+            )
             return latest_best_params
 
     def _optimize(
@@ -88,8 +98,14 @@ class Runner:
         latest_result: Optional[sim.SimulationResultType] = None,
     ) -> sim.SimulationResultType:
         if latest_result is None or revival:
+            self.logger.log(
+                f"Evaluating with {self.actor_name} on {self.scenario_name} scenario..."
+            )
             return self._evaluate(n_ite, params, callbacks, seed)
         else:
+            self.logger.log(
+                f"Use cached result with {self.actor_name} on {self.scenario_name} scenario."
+            )
             for ite, result in enumerate(latest_result):
                 for step, action in enumerate(result):
                     for callback in callbacks:

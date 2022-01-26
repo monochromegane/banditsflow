@@ -10,7 +10,7 @@ def test_optimize_is_not_called_when_revival_false_and_cache_is_found() -> None:
         Loader: Dict[Any, Any] = {}
 
     with patch.object(runner.Runner, "import_module", return_value=MockLoaderModule):
-        r = runner.Runner("scenario", actor_name="actor")
+        r = runner.Runner("scenario", actor_name="actor", mute=True)
 
         new_best_params = {"status": "new"}
         latest_best_params = {"status": "latest"}
@@ -34,7 +34,7 @@ def test_optimize_is_called_when_revival_false_and_cache_is_not_found() -> None:
         Loader: Dict[Any, Any] = {}
 
     with patch.object(runner.Runner, "import_module", return_value=MockLoaderModule):
-        r = runner.Runner("scenario", actor_name="actor")
+        r = runner.Runner("scenario", actor_name="actor", mute=True)
 
         new_best_params = {"status": "new"}
         with patch.object(r, "_optimize") as mock_optimize:
@@ -51,7 +51,7 @@ def test_optimize_is_called_when_revival_true_and_cache_is_not_found() -> None:
         Loader: Dict[Any, Any] = {}
 
     with patch.object(runner.Runner, "import_module", return_value=MockLoaderModule):
-        r = runner.Runner("scenario", actor_name="actor")
+        r = runner.Runner("scenario", actor_name="actor", mute=True)
 
         new_best_params = {"status": "new"}
         with patch.object(r, "_optimize") as mock_optimize:
@@ -68,7 +68,7 @@ def test_optimize_is_called_when_revival_true_and_cache_is_found() -> None:
         Loader: Dict[Any, Any] = {}
 
     with patch.object(runner.Runner, "import_module", return_value=MockLoaderModule):
-        r = runner.Runner("scenario", actor_name="actor")
+        r = runner.Runner("scenario", actor_name="actor", mute=True)
 
         new_best_params = {"status": "new"}
         latest_best_params = {"status": "latest"}
@@ -91,7 +91,7 @@ def test_evaluate_is_called_when_revival_false_and_cache_is_found() -> None:
         Loader: Dict[Any, Any] = {}
 
     with patch.object(runner.Runner, "import_module", return_value=MockLoaderModule):
-        r = runner.Runner("scenario", actor_name="actor")
+        r = runner.Runner("scenario", actor_name="actor", mute=True)
 
         new_result = [[{"metric": {"name": 0.0}, "result": {"status": "new"}}]]
         latest_result: List[List[act.ActionType]] = [
@@ -113,7 +113,7 @@ def test_evaluate_is_called_when_revival_false_and_cache_is_not_found() -> None:
         Loader: Dict[Any, Any] = {}
 
     with patch.object(runner.Runner, "import_module", return_value=MockLoaderModule):
-        r = runner.Runner("scenario", actor_name="actor")
+        r = runner.Runner("scenario", actor_name="actor", mute=True)
 
         new_result = [[{"metric": {"name": 0.0}, "result": {"status": "new"}}]]
         with patch.object(r, "_evaluate") as mock_evaluate:
@@ -128,7 +128,7 @@ def test_evaluate_is_called_when_revival_true_and_cache_is_not_found() -> None:
         Loader: Dict[Any, Any] = {}
 
     with patch.object(runner.Runner, "import_module", return_value=MockLoaderModule):
-        r = runner.Runner("scenario", actor_name="actor")
+        r = runner.Runner("scenario", actor_name="actor", mute=True)
 
         new_result = [[{"metric": {"name": 0.0}, "result": {"status": "new"}}]]
         with patch.object(r, "_evaluate") as mock_evaluate:
@@ -143,7 +143,7 @@ def test_evaluate_is_called_when_revival_true_and_cache_is_found() -> None:
         Loader: Dict[Any, Any] = {}
 
     with patch.object(runner.Runner, "import_module", return_value=MockLoaderModule):
-        r = runner.Runner("scenario", actor_name="actor")
+        r = runner.Runner("scenario", actor_name="actor", mute=True)
 
         new_result = [[{"metric": {"name": 0.0}, "result": {"status": "new"}}]]
         latest_result: List[List[act.ActionType]] = [
