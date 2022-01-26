@@ -27,12 +27,13 @@ class Simulator:
         actor_name: str,
         params: act.ParamsType,
         callbacks: List[ActionCallbackType],
+        step: str,
         seed: int,
     ) -> SimulationResultType:
         results: SimulationResultType = []
         for ite in range(n_ite):
             result = self._run_scenario(
-                ite, scenario_name, actor_name, params, callbacks, seed + ite
+                ite, scenario_name, actor_name, params, callbacks, step, seed + ite
             )
             results.append(result)
 
@@ -45,9 +46,10 @@ class Simulator:
         actor_name: str,
         params: act.ParamsType,
         callbacks: List[ActionCallbackType],
+        step: str,
         seed: int,
     ) -> List[act.ActionType]:
-        scenario = self.scenario_loader.load(scenario_name)
+        scenario = self.scenario_loader.load(scenario_name, step)
         actor = self.actor_loader.load(actor_name, scenario.synopsis(), params, seed)
 
         result: List[act.ActionType] = []

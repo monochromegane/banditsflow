@@ -7,7 +7,7 @@ from banditsflow import simulator as sim
 
 class DummyScenarioLoader:
     @staticmethod
-    def load(name: str) -> scenario.Scenario:
+    def load(name: str, step: str) -> scenario.Scenario:
         return DummyScenario()
 
 
@@ -53,7 +53,7 @@ class DummyEchoActor:
 
 def test_actor_receives_scenario_lines_in_run_scenario() -> None:
     simulator = sim.Simulator(DummyScenarioLoader, DummyEchoActorLoader)
-    result = simulator._run_scenario(0, "", "", {}, [], 0)
+    result = simulator._run_scenario(0, "", "", {}, [], "", 0)
     assert len(result) == 2  # Number of scenario lines
     assert result[0]["metric"]["i"] == 0  # Content of scenario line 0
     assert result[1]["metric"]["i"] == 1  # Content of scenario line 1
@@ -64,7 +64,9 @@ def test_callbacks_are_called_with_parameters_in_run_scenario() -> None:
     callback_0 = Mock()
     callback_1 = Mock()
     current_ite = 0
-    _ = simulator._run_scenario(current_ite, "", "", {}, [callback_0, callback_1], 0)
+    _ = simulator._run_scenario(
+        current_ite, "", "", {}, [callback_0, callback_1], "", 0
+    )
 
     assert callback_0.call_count == 2
     args_list = callback_0.call_args_list
@@ -80,7 +82,7 @@ def test_callbacks_are_called_with_parameters_in_run_scenario() -> None:
 def test_run_returns_n_ite_results() -> None:
     simulator = sim.Simulator(DummyScenarioLoader, DummyEchoActorLoader)
     n_ite = 3
-    results = simulator.run(n_ite, "", "", {}, [], 0)
+    results = simulator.run(n_ite, "", "", {}, [], "", 0)
     assert len(results) == n_ite
 
 
@@ -94,7 +96,7 @@ def test_run_scenario_is_called_n_ite_times_with_parameters_in_run() -> None:
 
     with patch.object(simulator, "_run_scenario") as mock_run_scenario:
         mock_run_scenario.return_value = []
-        _ = simulator.run(n_ite, scenario_name, actor_name, {}, [], seed)
+        _ = simulator.run(n_ite, scenario_name, actor_name, {}, [], "", seed)
 
     args_list = mock_run_scenario.call_args_list
 
@@ -103,5 +105,5 @@ def test_run_scenario_is_called_n_ite_times_with_parameters_in_run() -> None:
         expected_current_ite = i
         expected_seed = seed + i
         assert args == call(
-            expected_current_ite, scenario_name, actor_name, {}, [], expected_seed
+            expected_current_ite, scenario_name, actor_name, {}, [], "", expected_seed
         )

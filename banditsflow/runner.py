@@ -123,7 +123,13 @@ class Runner:
         simulator = sim.Simulator(self.scenario_loader, self.actor_loader)
 
         return simulator.run(
-            n_ite, self.scenario_name, self.actor_name, params, callbacks, seed
+            n_ite,
+            self.scenario_name,
+            self.actor_name,
+            params,
+            callbacks,
+            "evaluate",
+            seed,
         )
 
     def report(
