@@ -12,7 +12,7 @@ Combined with code management using Git, you will be able to manage your experim
 Generate scaffold.
 
 ```sh
-YOUR_BANDIT_FLOW_NAME='sample'
+$ YOUR_BANDIT_FLOW_NAME='sample'
 $ python -m banditsflow scaffold $YOUR_BANDIT_FLOW_NAME
 $ git add .
 $ git commit -m 'Initial commit'
