@@ -1,0 +1,24 @@
+EXPERIMENT := $$$$(git describe --tags --abbrev=0 --always)
+REVISION := $$$$(git rev-parse --short HEAD)
+FLOW := ${flow_name}
+SCENARIO := ${flow_name}
+REPORTER := ${flow_name}
+
+.PHONY: run
+run:
+	python -m $$(FLOW) run \
+	       --tag "experiment_name:$$(EXPERIMENT)" \
+	       --tag "experiment_revision:$$(REVISION)" \
+	       --tag "scenario:$$(SCENARIO)" \
+               --experiment_name $$(EXPERIMENT) \
+               --experiment_revision $$(REVISION) \
+               --scenario $$(SCENARIO) \
+               --actor 'epsilon_greedy' \
+               --actor 'ucb1' \
+               --actor 'thompson_sampling' \
+               --revival_from_optimization_by 'epsilon_greedy' \
+               --reporter $$(REPORTER) \
+               --optimization_direction 'maximize' \
+               --optimization_metric 'cumulative_reward' \
+               --n_trials=10 \
+               --n_ite=10

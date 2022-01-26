@@ -21,13 +21,16 @@ def test_build() -> None:
         "reporter/__init__.py",
         "reporter/loader.py",
         f"{name}.py",
+        "Makefile",
     ]
     class_name_paths = ["scenario/loader.py", "reporter/loader.py"]
+    flow_name_paths = ["Makefile"]
 
     with tempfile.TemporaryDirectory() as dest_dir:
         scaffold.Builder().build(name, src_dir, dest_dir)
 
         dest_paths = list(pathlib.Path(dest_dir).glob("**/*.*"))
+        dest_paths.extend(list(pathlib.Path(dest_dir).glob("Makefile")))
         assert len(dest_paths) == len(expect_paths)
 
         relative_pathnames = [
@@ -42,6 +45,10 @@ def test_build() -> None:
                     match_lines = [
                         line for line in f.readlines() if "SampleBandit" in line
                     ]
+                    assert len(match_lines) > 0
+            if relative_pathname in flow_name_paths:
+                with dest_path.open(mode="r") as f:
+                    match_lines = [line for line in f.readlines() if "sample" in line]
                     assert len(match_lines) > 0
 
 

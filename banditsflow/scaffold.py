@@ -8,7 +8,7 @@ class Builder:
         for src_path in pathlib.Path(src_dir).glob("**/*.txt"):
             content = src_path.read_text()
             new_content = Template(content).substitute(
-                {"class_name": self.__class__.to_title_case(name)}
+                {"flow_name": name, "class_name": self.__class__.to_title_case(name)}
             )
 
             relative_path = src_path.relative_to(src_dir).with_suffix("")
