@@ -75,20 +75,17 @@ class BanditsFlow(FlowSpec):  # type: ignore
         latest_best_params = flow_data.latest_best_params(
             self.param_scenario, actor_name
         )
+        revival = actor_name in self.param_revival_optimization_by
 
-        if (
-            latest_best_params is None
-            or actor_name in self.param_revival_optimization_by
-        ):
-            runner = run.Runner(self.param_scenario, actor_name=actor_name)
-            self.best_params = runner.optimize(
-                self.param_n_trials,
-                self.param_optimization_direction,
-                self.param_optimization_metric,
-                self.param_seed,
-            )
-        else:
-            self.best_params = latest_best_params
+        runner = run.Runner(self.param_scenario, actor_name=actor_name)
+        self.best_params = runner.optimize(
+            self.param_n_trials,
+            self.param_optimization_direction,
+            self.param_optimization_metric,
+            self.param_seed,
+            revival=revival,
+            latest_best_params=latest_best_params,
+        )
 
         self.next(self.evaluate)
 
@@ -113,18 +110,16 @@ class BanditsFlow(FlowSpec):  # type: ignore
 
             flow_data = data.BanditsFlowData(self.param_experiment_name)
             latest_result = flow_data.latest_result(self.param_scenario, actor_name)
-            if latest_result is None or actor_name in self.param_revival_evaluation_by:
-                self.result = runner.evaluate(
-                    self.param_n_ite,
-                    self.best_params,
-                    [callback],
-                    self.param_seed + self.param_n_trials,
-                )
-            else:
-                for current_ite, result in enumerate(latest_result):
-                    for current_step, action in enumerate(result):
-                        callback(current_ite, current_step, action)
-                self.result = latest_result
+            revival = actor_name in self.param_revival_evaluation_by
+
+            self.result = runner.evaluate(
+                self.param_n_ite,
+                self.best_params,
+                [callback],
+                self.param_seed + self.param_n_trials,
+                revival=revival,
+                latest_result=latest_result,
+            )
 
         self.next(self.join)
 
