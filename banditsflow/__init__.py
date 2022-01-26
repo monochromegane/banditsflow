@@ -49,14 +49,14 @@ class BanditsFlow(FlowSpec):  # type: ignore
         required=True,
         help="Name of simulation metric for optimization",
     )
-    param_revival_optimization_by = Parameter(
-        "revival_optimization_by",
+    param_revival_from_optimization_by = Parameter(
+        "revival_from_optimization_by",
         type=str,
         multiple=True,
         help="Name of actor who acts optimization step again for current experiment",
     )
-    param_revival_evaluation_by = Parameter(
-        "revival_evaluation_by",
+    param_revival_from_evaluation_by = Parameter(
+        "revival_from_evaluation_by",
         type=str,
         multiple=True,
         help="Name of actor who acts evaluation step again for current experiment",
@@ -75,7 +75,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
         latest_best_params = flow_data.latest_best_params(
             self.param_scenario, actor_name
         )
-        revival = actor_name in self.param_revival_optimization_by
+        revival = actor_name in self.param_revival_from_optimization_by
 
         runner = run.Runner(self.param_scenario, actor_name=actor_name)
         self.best_params = runner.optimize(
@@ -86,6 +86,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
             revival=revival,
             latest_best_params=latest_best_params,
         )
+        self.during_revival = latest_best_params is None or revival
 
         self.next(self.evaluate)
 
@@ -110,7 +111,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
 
             flow_data = data.BanditsFlowData(self.param_experiment_name)
             latest_result = flow_data.latest_result(self.param_scenario, actor_name)
-            revival = actor_name in self.param_revival_evaluation_by
+            revival = self.during_revival or actor_name in self.param_revival_from_evaluation_by
 
             self.result = runner.evaluate(
                 self.param_n_ite,
