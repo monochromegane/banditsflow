@@ -21,5 +21,5 @@ class ${class_name}:
 
 class Loader:
     @staticmethod
-    def load(name: str) -> scenario.Scenario:
+    def load(name: str, step: str) -> scenario.Scenario:
         return ${class_name}()
