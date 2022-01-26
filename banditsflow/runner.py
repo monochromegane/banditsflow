@@ -48,9 +48,18 @@ class Runner:
             )
 
     def optimize(
-        self, n_trials: int, direction: str, metric: str, seed: int
+        self,
+        n_trials: int,
+        direction: str,
+        metric: str,
+        seed: int,
+        revival: bool = False,
+        latest_best_params: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        return self._optimize(n_trials, direction, metric, seed)
+        if latest_best_params is None or revival:
+            return self._optimize(n_trials, direction, metric, seed)
+        else:
+            return latest_best_params
 
     def _optimize(
         self, n_trials: int, direction: str, metric: str, seed: int
@@ -75,8 +84,18 @@ class Runner:
         params: act.ParamsType,
         callbacks: List[sim.ActionCallbackType],
         seed: int,
+        revival: bool = False,
+        latest_result: Optional[sim.SimulationResultType] = None,
     ) -> sim.SimulationResultType:
-        return self._evaluate(n_ite, params, callbacks, seed)
+        if latest_result is None or revival:
+            return self._evaluate(n_ite, params, callbacks, seed)
+        else:
+            for ite, result in enumerate(latest_result):
+                for step, action in enumerate(result):
+                    for callback in callbacks:
+                        callback(ite, step, action)
+
+            return latest_result
 
     def _evaluate(
         self,
