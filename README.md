@@ -17,18 +17,7 @@ $ python -m banditsflow scaffold $YOUR_BANDIT_FLOW_NAME
 $ git add .
 $ git commit -m 'Initial commit'
 $ git tag first-experiment
-$ python -m $YOUR_BANDIT_FLOW_NAME run \
-         --experiment_name $(git describe --tags --abbrev=0 --always) \
-         --experiment_revision $(git rev-parse --short HEAD) \
-         --scenario $YOUR_BANDIT_FLOW_NAME \
-         --actor 'epsilon_greedy' \
-         --actor 'ucb1' \
-         --actor 'thompson_sampling' \
-         --reporter $YOUR_BANDIT_FLOW_NAME \
-         --optimization_direction 'maximize' \
-         --optimization_metric 'cumulative_reward' \
-         --n_trials=10 \
-         --n_ite=10
+$ make run
 $ mlflow ui
 ```
 
