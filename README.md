@@ -107,8 +107,8 @@ The each step result are saved by Metaflow and MLflow Tracking.
     RAW DATA         │                         │     │ ┌─exp-1───────────────┐ │       REPORT DATA
                      │   ┌─Run─────────────┐   │     │ │ ┌─Run (actor-1)───┐ │ │
 <best_params> ◄─┬────────┤ ID:   mt-run-1  ├──────┬─────►│ ID:   ml-run-A  ├───────┬─► [Parameter]
-     <result> ◄─┘    │   │ Tag:  exp-1     │   │  │  │ │ │ Name: mt-run-1  │ │ │   └─► [Metric]
-                     │   └─────────────────┘   │  │  │ │ └─────────────────┘ │ │
+Each <result> ◄─┤    │   │ Tag:  exp-1     │   │  │  │ │ │ Name: mt-run-1  │ │ │   └─► [Metric]
+    <results> ◄─┘    │   └─────────────────┘   │  │  │ │ └─────────────────┘ │ │
                      │                         │  │  │ │ ┌─Run (actor-2)───┐ │ │
                      │                         │  ├─────►│ ID:   ml-run-B  ├───────┬─► [Parameter]
                      │                         │  │  │ │ │ Name: mt-run-1  │ │ │   └─► [Metric]
