@@ -56,31 +56,35 @@ The workflow has optimize and evaluate and report steps.
 The each step result are saved by Metaflow and MLflow Tracking.
 
 ```
-               ┌─────────┐
-               │  start  │
-               └────┬────┘
-     ┌──────────────┼──────────────┐
- (actor-1)      (actor-2)      (actor-3)
-┌────┴────┐    ┌────┴────┐    ┌────┴────┐
-│optimize │    │optimize │    │optimize │
-└────┬────┘    └────┬────┘    └────┬────┘
-best_params         │              │
-┌────┴────┐    ┌────┴────┐    ┌────┴────┐
-│evaluate │    │evaluate │    │evaluate ├─┬─► [Parameter]
-└────┬────┘    └────┬────┘    └────┬────┘ │
-     │              │              │      └─► [Metric]
-  result         result         result
-     └──────────────┼──────────────┘
-               ┌────┴────┐
-               │  join   │
-               └────┬────┘
-                 results
-               ┌────┴────┐
-               │ report  ├──────────────────► [Artifact]
-               └────┬────┘
-               ┌────┴────┐
-               │   end   │
-               └─────────┘
+                                   ┌─────────┐
+                                   │  start  │
+                                   └────┬────┘
+                         ┌──────────────┼──────────────┐
+                     (actor-1)      (actor-2)      (actor-3)
+ {suggestion}       ┌────┴────┐    ┌────┴────┐    ┌────┴────┐
+ {scenario  } ─────►│optimize │    │optimize │    │optimize ├───► <best_params>
+ {actor     }       └────┬────┘    └────┬────┘    └────┬────┘
+                    best_params    best_params    best_params
+                    ┌────┴────┐    ┌────┴────┐    ┌────┴────┐
+ {scenario  } ─────►│evaluate │    │evaluate │    │evaluate ├─┬─► <result>
+ {actor     }       └────┬────┘    └────┬────┘    └────┬────┘ │
+                         │              │              │      ├─► [Parameter]
+                      result         result         result    └─► [Metric]
+                         └──────────────┼──────────────┘
+                                   ┌────┴────┐
+                                   │  join   │
+                                   └────┬────┘
+                                     results
+                                   ┌────┴────┐
+ {reporter  } ────────────────────►│ report  ├──────────────────► [Artifact]
+                                   └────┬────┘
+                                   ┌────┴────┐
+                                   │   end   │
+                                   └─────────┘
+
+{}: Module
+[]: MLflow Tracking
+<>: Metaflow
 ```
 
 ## Optimization
