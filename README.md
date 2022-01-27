@@ -9,7 +9,7 @@ Combined with code management using Git, you will be able to manage your experim
 
 ## Usage
 
-Generate scaffold.
+### 1. Generate scaffold and first run your experiment
 
 ```sh
 $ YOUR_BANDIT_FLOW_NAME='sample'
@@ -23,9 +23,7 @@ $ mlflow ui
 
 And access to http://127.0.0.1:5000
 
-
-
-## Build experimence module
+### 2. Customize experiment
 
 1. Implement our scenario.
 1. Implement an actor who acts the scenario.
@@ -48,6 +46,18 @@ Note that each module has a loader.Loader class which returns its instance by na
     ├── ACTOR_NAME.yml
     └── loader.py
 ```
+
+### 3. Update experiment and run
+
+```sh
+$ git add .
+$ git commit -m 'Customize modules'
+$ git tag second-experiment
+$ make run
+$ mlflow ui
+```
+
+Repeat 2 and 3.
 
 ## Workflow
 
