@@ -97,6 +97,13 @@ The each step result are saved by Metaflow and MLflow Tracking.
 <>: Metaflow
 ```
 
+## Cache
+
+BanditsFlow stores metrics, results and reports for every run.
+BanditsFlow assumes that the results are the same for the same experiment, and reduces the time needed to re-run the experiment by using previous results.
+These caches are searched using the experiment name, scenario name, and actor name as keys.
+You can re-run the experiment by specifying the `--revival_from_optimization_by` or `--revival_from_evaluation_by` option or changing the name of the experiment by setting another git tag).
+
 ## Optimization
 
 BanditsFlow uses Optuna for optimization.
