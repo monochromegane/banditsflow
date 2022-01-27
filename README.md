@@ -97,6 +97,52 @@ The each step result are saved by Metaflow and MLflow Tracking.
 <>: Metaflow
 ```
 
+## Data location and relation
+
+```
+                              Metaflow                     MLflow Tracking
+
+                     ┌─Flow(BanditsFlow)───────┐     ┌─Experiments─────────────┐
+                     │                         │     │                         │
+    RAW DATA         │                         │     │ ┌─exp-1───────────────┐ │       REPORT DATA
+                     │   ┌─Run─────────────┐   │     │ │ ┌─Run (actor-1)───┐ │ │
+<best_params> ◄─┬────────┤ ID:   mt-run-1  ├──────┬─────►│ ID:   ml-run-A  ├───────┬─► [Parameter]
+     <result> ◄─┘    │   │ Tag:  exp-1     │   │  │  │ │ │ Name: mt-run-1  │ │ │   └─► [Metric]
+                     │   └─────────────────┘   │  │  │ │ └─────────────────┘ │ │
+                     │                         │  │  │ │ ┌─Run (actor-2)───┐ │ │
+                     │                         │  ├─────►│ ID:   ml-run-B  ├───────┬─► [Parameter]
+                     │                         │  │  │ │ │ Name: mt-run-1  │ │ │   └─► [Metric]
+                     │                         │  │  │ │ └─────────────────┘ │ │
+                     │                         │  │  │ │ ┌─Run (reporter)──┐ │ │
+                     │                         │  └─────►│ ID:   ml-run-C  ├─────────► [Artifact]
+                     │                         │     │ │ │ Name: mt-run-1  │ │ │
+                     │                         │     │ │ └─────────────────┘ │ │
+                     │                         │     │ │                     │ │
+                     │                         │     │ │  -----------------  │ │
+                     │                         │     │ │                     │ │
+                     │   ┌─Run─────────────┐   │     │ │ ┌─Run (actor-1)───┐ │ │
+                     │   │ ID:   mt-run-2  ├──────┬─────►│ ID:   ml-run-D  │ │ │
+                     │   │ Tag:  exp-1     │   │  │  │ │ │ Name: mt-run-2  │ │ │
+                     │   └─────────────────┘   │  │  │ │ └─────────────────┘ │ │
+                     │                         │  │  │ │ ┌─Run (actor-2)───┐ │ │
+                     │                         │  ├─────►│ ID:   ml-run-E  │ │ │
+                     │                         │  │  │ │ │ Name: mt-run-2  │ │ │
+                     │                         │  │  │ │ └─────────────────┘ │ │
+                     │                         │  │  │ │ ┌─Run (reporter)──┐ │ │
+                     │                         │  └─────►│ ID:   ml-run-F  │ │ │
+                     │                         │     │ │ │ Name: mt-run-2  │ │ │
+                     │                         │     │ │ └─────────────────┘ │ │
+                     │                         │     │ └─────────────────────┘ │
+                     │                         │     │                         │
+                     │                         │     │ ┌─exp-2───────────────┐ │
+                     │   ┌─Run─────────────┐   │     │ │ ...                 │ │
+                     │   │ ID:   mt-run-3  ├────────────►...                 │ │
+                     │   │ Tag:  exp-2     │   │     │ │ ...                 │ │
+                     │   └─────────────────┘   │     │ │ ...                 │ │
+                     │                         │     │ └─────────────────────┘ │
+                     └─────────────────────────┘     └─────────────────────────┘
+```
+
 ## Cache
 
 BanditsFlow stores metrics, results and reports for every run.
@@ -124,6 +170,7 @@ suggestions:
 ```
 
 See [Optuna document](https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html) for other type and parameter for each type.
+
 
 ## Installation
 
