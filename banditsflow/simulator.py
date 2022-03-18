@@ -49,7 +49,7 @@ class Simulator:
         step: str,
         seed: int,
     ) -> List[act.ActionType]:
-        scenario = self.scenario_loader.load(scenario_name, step)
+        scenario = self.scenario_loader.load(scenario_name, step, seed)
         actor = self.actor_loader.load(actor_name, scenario.synopsis(), params, seed)
 
         result: List[act.ActionType] = []

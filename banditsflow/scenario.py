@@ -17,5 +17,5 @@ class Scenario(Protocol):
 
 class ScenarioLoader(Protocol):
     @staticmethod
-    def load(name: str, step: str) -> Scenario:
+    def load(name: str, step: str, seed: int) -> Scenario:
         ...

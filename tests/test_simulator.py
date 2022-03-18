@@ -7,7 +7,7 @@ from banditsflow import simulator as sim
 
 class DummyScenarioLoader:
     @staticmethod
-    def load(name: str, step: str) -> scenario.Scenario:
+    def load(name: str, step: str, seed: int) -> scenario.Scenario:
         return DummyScenario()
 
 
