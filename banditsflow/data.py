@@ -42,7 +42,7 @@ class BanditsFlowData:
         if len(successful_runs) == 0:
             return None
 
-        latest_successful_run = successful_runs[-1]
+        latest_successful_run = successful_runs[0]
         step = Step(f"{self.flow_name}/{latest_successful_run.id}/{step_name}")
 
         actor_tasks = [task for task in step.tasks() if task.data.actor == actor_name]
