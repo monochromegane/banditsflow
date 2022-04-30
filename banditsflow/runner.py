@@ -106,11 +106,6 @@ class Runner:
             self.logger.log(
                 f"Use cached result with {self.actor_name} on {self.scenario_name} scenario."
             )
-            for ite, result in enumerate(latest_result):
-                for step, action in enumerate(result):
-                    for callback in callbacks:
-                        callback(ite, step, action)
-
             return latest_result
 
     def _evaluate(
