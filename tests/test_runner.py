@@ -104,7 +104,7 @@ def test_evaluate_is_called_when_revival_false_and_cache_is_found() -> None:
                 1, {}, [callback], 1, revival=False, latest_result=latest_result
             )
             mock_evaluate.assert_not_called()
-            callback.assert_called_once_with(0, 0, latest_result[0][0])
+            callback.assert_not_called()
             assert result[0][0]["result"]["status"] == "latest"
 
 

@@ -61,6 +61,12 @@ class BanditsFlow(FlowSpec):  # type: ignore
         multiple=True,
         help="Name of actor who acts evaluation step again for current experiment",
     )
+    param_save_metrics = Parameter(
+        "save_metrics",
+        type=bool,
+        default=True,
+        help="Save metrics if only this option is true",
+    )
 
     @step
     def start(self) -> None:
@@ -116,10 +122,12 @@ class BanditsFlow(FlowSpec):  # type: ignore
                 or actor_name in self.param_revival_from_evaluation_by
             )
 
+            callbacks = [callback] if self.param_save_metrics else []
+
             self.result = runner.evaluate(
                 self.param_n_ite,
                 self.best_params,
-                [callback],
+                callbacks,
                 self.param_seed + self.param_n_trials,
                 revival=revival,
                 latest_result=latest_result,
