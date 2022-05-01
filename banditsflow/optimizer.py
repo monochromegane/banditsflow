@@ -42,7 +42,7 @@ class Optimizer:
                 params,
                 [],
                 "optimize",
-                seed + trial.number,
+                seed,
             )
 
             return to_objective(metric, results)

@@ -128,7 +128,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
                 self.param_n_ite,
                 self.best_params,
                 callbacks,
-                self.param_seed + self.param_n_trials,
+                self.param_seed + 1,
                 revival=revival,
                 latest_result=latest_result,
             )
