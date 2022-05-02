@@ -133,24 +133,20 @@ class BanditsFlow(FlowSpec):  # type: ignore
                 latest_result=latest_result,
             )
 
-        self.next(self.join)
-
-    @step
-    def join(self, inputs: Inputs) -> None:
-        self.results = {input_.actor: input_.result for input_ in inputs}
         self.next(self.report)
 
     @step
-    def report(self) -> None:
+    def report(self, inputs: Inputs) -> None:
         runner = run.Runner(self.param_scenario, reporter_name=self.param_reporter)
 
+        results = {input_.actor: input_.result for input_ in inputs}
         with mlflow.start_run(
             experiment_id=self._experiment_id(),
             run_name=current.run_id,
             tags=self._experiment_tags(),
         ):
             with tempfile.TemporaryDirectory() as dirname:
-                report_paths = runner.report(dirname, self.results)
+                report_paths = runner.report(dirname, results)
 
                 for path in report_paths:
                     mlflow.log_artifact(path)
