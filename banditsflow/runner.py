@@ -54,6 +54,7 @@ class Runner:
     def optimize(
         self,
         n_trials: int,
+        timeout: float,
         direction: str,
         metric: str,
         seed: int,
@@ -64,7 +65,7 @@ class Runner:
             self.logger.log(
                 f"Optimizing parameters for {self.actor_name} on {self.scenario_name} scenario..."
             )
-            return self._optimize(n_trials, direction, metric, seed)
+            return self._optimize(n_trials, timeout, direction, metric, seed)
         else:
             self.logger.log(
                 f"Use cached parameters for {self.actor_name} on {self.scenario_name} scenario."
@@ -72,13 +73,19 @@ class Runner:
             return latest_best_params
 
     def _optimize(
-        self, n_trials: int, direction: str, metric: str, seed: int
+        self,
+        n_trials: int,
+        timeout: float,
+        direction: str,
+        metric: str,
+        seed: int,
     ) -> Dict[str, Any]:
         optimizer = optim.Optimizer(
             self.scenario_loader, self.actor_loader, self.suggestion_loader
         )
         study = optimizer.optimize(
             n_trials,
+            timeout,
             self.scenario_name,
             self.actor_name,
             direction,

@@ -37,6 +37,12 @@ class BanditsFlow(FlowSpec):  # type: ignore
     param_n_trials = Parameter(
         "n_trials", type=int, default=1, help="Number of optimization"
     )
+    param_timeout = Parameter(
+        "timeout",
+        type=float,
+        default=-1.0,
+        help="Number of timeout seconds for optimization",
+    )
     param_optimization_direction = Parameter(
         "optimization_direction",
         type=str,
@@ -86,6 +92,7 @@ class BanditsFlow(FlowSpec):  # type: ignore
         runner = run.Runner(self.param_scenario, actor_name=actor_name)
         self.best_params = runner.optimize(
             self.param_n_trials,
+            self.param_timeout,
             self.param_optimization_direction,
             self.param_optimization_metric,
             self.param_seed,

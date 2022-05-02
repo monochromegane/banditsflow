@@ -22,6 +22,7 @@ class Optimizer:
     def optimize(
         self,
         n_trials: int,
+        timeout: float,
         scenario_name: str,
         actor_name: str,
         direction: str,
@@ -50,7 +51,9 @@ class Optimizer:
         study = optuna.create_study(
             direction=direction, sampler=optuna.samplers.TPESampler(seed=seed)
         )
-        study.optimize(objective, n_trials=n_trials)
+        study.optimize(
+            objective, n_trials=n_trials, timeout=(timeout if timeout > 0.0 else None)
+        )
 
         return study
 

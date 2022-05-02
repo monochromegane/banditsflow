@@ -18,6 +18,7 @@ def test_optimize_is_not_called_when_revival_false_and_cache_is_found() -> None:
             mock_optimize.return_value = new_best_params
             best_params = r.optimize(
                 1,
+                -1.0,
                 "maximize",
                 "metric",
                 1,
@@ -40,7 +41,7 @@ def test_optimize_is_called_when_revival_false_and_cache_is_not_found() -> None:
         with patch.object(r, "_optimize") as mock_optimize:
             mock_optimize.return_value = new_best_params
             best_params = r.optimize(
-                1, "maximize", "metric", 1, revival=False, latest_best_params=None
+                1, -1.0, "maximize", "metric", 1, revival=False, latest_best_params=None
             )
             mock_optimize.assert_called_once()
             assert best_params["status"] == "new"
@@ -57,7 +58,7 @@ def test_optimize_is_called_when_revival_true_and_cache_is_not_found() -> None:
         with patch.object(r, "_optimize") as mock_optimize:
             mock_optimize.return_value = new_best_params
             best_params = r.optimize(
-                1, "maximize", "metric", 1, revival=True, latest_best_params=None
+                1, -1.0, "maximize", "metric", 1, revival=True, latest_best_params=None
             )
             mock_optimize.assert_called_once()
             assert best_params["status"] == "new"
@@ -76,6 +77,7 @@ def test_optimize_is_called_when_revival_true_and_cache_is_found() -> None:
             mock_optimize.return_value = new_best_params
             best_params = r.optimize(
                 1,
+                -1.0,
                 "maximize",
                 "metric",
                 1,
