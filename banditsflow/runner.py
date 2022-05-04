@@ -138,7 +138,7 @@ class Runner:
         self,
         outdir: str,
         results: Dict[str, sim.SimulationResultType],
-        best_params: act.ParamsType,
+        best_params: Dict[str, act.ParamsType],
     ) -> List[str]:
         reporter = self.reporter_loader.load(self.reporter_name, outdir)
 

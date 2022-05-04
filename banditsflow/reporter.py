@@ -9,7 +9,9 @@ class Reporter(Protocol):
         ...
 
     def report(
-        self, results: Dict[str, sim.SimulationResultType], best_params: act.ParamsType
+        self,
+        results: Dict[str, sim.SimulationResultType],
+        best_params: Dict[str, act.ParamsType],
     ) -> List[str]:
         ...
 
