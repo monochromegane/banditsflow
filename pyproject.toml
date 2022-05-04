@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "banditsflow"
-version = "0.1.8"
+version = "0.1.9"
 description = "A building workflow and tracking its information framework for bandits."
 authors = ["monochromegane"]
 license = "MIT"
