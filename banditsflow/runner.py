@@ -135,11 +135,14 @@ class Runner:
         )
 
     def report(
-        self, outdir: str, results: Dict[str, sim.SimulationResultType]
+        self,
+        outdir: str,
+        results: Dict[str, sim.SimulationResultType],
+        best_params: act.ParamsType,
     ) -> List[str]:
         reporter = self.reporter_loader.load(self.reporter_name, outdir)
 
-        return reporter.report(results)
+        return reporter.report(results, best_params)
 
     @staticmethod
     def import_module(name: str) -> types.ModuleType:

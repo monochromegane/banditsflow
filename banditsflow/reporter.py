@@ -1,5 +1,6 @@
 from typing import Dict, List, Protocol
 
+from . import actor as act
 from . import simulator as sim
 
 
@@ -7,7 +8,9 @@ class Reporter(Protocol):
     def __init__(self, outdir: str) -> None:
         ...
 
-    def report(self, results: Dict[str, sim.SimulationResultType]) -> List[str]:
+    def report(
+        self, results: Dict[str, sim.SimulationResultType], best_params: act.ParamsType
+    ) -> List[str]:
         ...
 
 
