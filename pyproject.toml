@@ -6,20 +6,20 @@ authors = ["monochromegane"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.11"
-scipy = "^1.7.3"
-numpy = "^1.22.1"
+python = ">=3.10,<3.12"
+scipy = "^1.8"
+numpy = "^1.23.4"
 metaflow = "^2.4.9"
 mlflow = "^1.23.0"
 optuna = "^2.10.0"
 
-[tool.poetry.dev-dependencies]
-pysen = "^0.10.1"
-black = "^21.12b0"
-flake8 = "^4.0.1"
+[tool.poetry.group.dev.dependencies]
+pysen = "^0.10.2"
+black = "^22.10.0"
+flake8 = "^5.0.4"
 isort = "^5.10.1"
-mypy = "^0.931"
-pytest = "^6.2.5"
+mypy = "^0.982"
+pytest = "^7.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -35,6 +35,6 @@ enable_isort = true
 enable_mypy = true
 mypy_preset = "strict"
 line_length = 88
-py_version = "py38"
+py_version = "py310"
 [[tool.pysen.lint.mypy_targets]]
   paths = ["."]
